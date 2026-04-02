@@ -33,3 +33,33 @@ I wrote test for each scenairio and looked that it should fail.
 For each failure: I wrote schema, route logic, service logic. until the test passes for the behaviour at hand.
 
 server.ts and app.ts are 2 different files because supertest tests directly with app.
+
+## Implementation Details
+
+### Approach
+Built with strict outside-in TDD — behaviour defined before implementation, one layer at a time.
+
+Layer order:
+1. Entity validation — pure functions, no infrastructure, fastest feedback loop
+2. Store layer — PostgreSQL via node-postgres, no ORM, direct SQL
+3. HTTP layer — Express routes, tested end to end with supertest
+
+Every test was written red first. Minimum code written to make it green. Then next test.
+
+### AI Usage
+Used Claude (claude.ai) as a pair programming guide throughout the session.
+
+Claude did not generate bulk code. The workflow was:
+- Claude explained TDD concepts and asked questions
+- I reasoned through the answer and wrote the test
+- Claude reviewed and corrected where needed
+- I wrote the implementation to make it green
+
+Prompts were conversational — "what should the first test be?", "why should it fail first?" — not "generate me a CRUD API". The goal was understanding, not output.
+
+### Key Design Decisions
+- PostgreSQL over SQLite — production databases don't use SQLite
+- No ORM — raw SQL keeps the data layer transparent and explicit
+- app.ts and server.ts separated — so supertest can import the app without binding a real port
+- validateEmployee called inside the route — HTTP layer delegates to the domain layer, not the other way around
+- afterEach cleans DB rows, afterAll closes pool — tests are isolated and repeatable
