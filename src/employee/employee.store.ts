@@ -35,10 +35,13 @@ export function getEmployeeById(id: number): EmployeeRecord | null {
 }
 
 export function getSalaryMetricsByCountry(country: string): Metrics | null {
-  return db.prepare(
+  const result = db.prepare(
     `SELECT MIN(salary) as min, MAX(salary) as max, AVG(salary) as avg
      FROM employees WHERE LOWER(country) = LOWER(?)`
-  ).get(country) as Metrics || null
+  ).get(country) as Metrics | null
+
+  if (!result || result.min === null) return null
+  return result
 }
 
 export function getAvgSalaryByJobTitle(jobTitle: string): { avg: number } | null {
