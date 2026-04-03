@@ -29,6 +29,18 @@ it('should return false when name is missing', () => {
   expect(result.valid).toBe(false)
 })
 
+it('should return false when name is undefined', () => {
+  const emp = {
+    name: undefined,
+    salary: 150000,
+    jobTitle: 'swe',
+    country: 'india'
+  } as any
+
+  const result = validateEmployee(emp)
+  expect(result.valid).toBe(false)
+})
+
  it('should return false when salary is less than 1', () => {
   const emp: Employee = {
     name: 'pk',
