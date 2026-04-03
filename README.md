@@ -69,3 +69,66 @@ Prompts were conversational — "what should the first test be?", "why should it
 - Clone this repo `git clone git@github.com:praveenprk/Incubyte-Salary-Management-Kata.git`
 - `cd` into the cloned repo
 - Run `npm start`
+
+## Test the API
+
+**Create an employee (India)**
+```bash
+curl -X POST http://localhost:3000/employees \
+  -H "Content-Type: application/json" \
+  -d '{"name": "pk", "salary": 100000, "jobTitle": "swe", "country": "india"}'
+```
+
+**Create an employee (United States)**
+```bash
+curl -X POST http://localhost:3000/employees \
+  -H "Content-Type: application/json" \
+  -d '{"name": "john", "salary": 100000, "jobTitle": "swe", "country": "united states"}'
+```
+Note the id.
+
+**Get employee by id**
+```bash
+curl http://localhost:3000/employees/<id>
+```
+
+**Update employee**
+```bash
+curl -X PUT http://localhost:3000/employees/<id> \
+  -H "Content-Type: application/json" \
+  -d '{"name": "pk updated", "salary": 200000, "jobTitle": "senior swe", "country": "india"}'
+```
+
+**Delete employee**
+```bash
+curl -X DELETE http://localhost:3000/employees/<id>
+```
+
+**Salary calculation (TDS deduction by country)**
+```bash
+curl http://localhost:3000/employees/<id>/salary
+```
+
+**Salary metrics by country**
+```bash
+curl "http://localhost:3000/employees/metrics/country?country=india"
+```
+
+**Salary metrics by job title**
+```bash
+curl "http://localhost:3000/employees/metrics/jobtitle?jobTitle=swe"
+```
+
+**Edge cases**
+```bash
+# missing field - should return 400
+curl -X POST http://localhost:3000/employees \
+  -H "Content-Type: application/json" \
+  -d '{"salary": 100000, "jobTitle": "swe", "country": "india"}'
+
+# employee not found - should return 404
+curl http://localhost:3000/employees/99999
+
+# country with no employees - should return 404
+curl "http://localhost:3000/employees/metrics/country?country=antarctica"
+```
