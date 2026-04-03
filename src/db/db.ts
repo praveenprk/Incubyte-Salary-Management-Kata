@@ -1,8 +1,16 @@
-import { Pool } from 'pg'
-import 'dotenv/config'
+import Database from 'better-sqlite3'
+import path from 'path'
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-})
+const db = new Database(path.join(__dirname, '../../salary_kata.db'))
 
-export default pool
+db.exec(`
+  CREATE TABLE IF NOT EXISTS employees (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    salary REAL NOT NULL,
+    job_title TEXT NOT NULL,
+    country TEXT NOT NULL
+  )
+`)
+
+export default db
