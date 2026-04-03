@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createEmployee, updateEmployee, getAvgSalaryByJobTitle, getEmployeeById, getSalaryMetricsByCountry } from './employee.store'
+import { createEmployee, updateEmployee, deleteEmployee, getAvgSalaryByJobTitle, getEmployeeById, getSalaryMetricsByCountry } from './employee.store'
 import { validateEmployee } from './employee.validator'
 import { calculateSalary } from './salary.calculator'
 
@@ -96,6 +96,18 @@ router.get('/metrics/jobtitle', (req, res) => {
   res.status(200).json({
     avg: metrics.avg
   })
+})
+
+router.delete('/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const deleted = deleteEmployee(id)
+
+  if (!deleted) {
+    res.status(404).json({ error: 'Employee not found' })
+    return
+  }
+
+  res.status(204).send()
 })
 
 export default router

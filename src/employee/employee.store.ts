@@ -47,3 +47,11 @@ export function getAvgSalaryByJobTitle(jobTitle: string): { avg: number } | null
      FROM employees WHERE LOWER(job_title) = LOWER(?)`
   ).get(jobTitle) as { avg: number } || null
 }
+
+export function deleteEmployee(id: number): boolean {
+  const existing = getEmployeeById(id)
+  if (!existing) return false
+
+  db.prepare('DELETE FROM employees WHERE id = ?').run(id)
+  return true
+}
