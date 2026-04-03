@@ -186,3 +186,29 @@ describe('PUT /employees/:id', () => {
   })
 
 })
+
+describe('DELETE /employees/:id', () => {
+
+  afterEach(() => {
+    db.prepare('DELETE FROM employees').run()
+  })
+
+  it('should delete an employee and return 204', async () => {
+    const created = await request(app)
+      .post('/employees')
+      .send({ name: 'pk', salary: 150000, jobTitle: 'swe', country: 'india' })
+
+    const response = await request(app)
+      .delete(`/employees/${created.body.id}`)
+
+    expect(response.status).toBe(204)
+  })
+
+  it('should return 404 when employee not found', async () => {
+    const response = await request(app)
+      .delete('/employees/99999')
+
+    expect(response.status).toBe(404)
+  })
+
+})
