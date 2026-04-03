@@ -63,3 +63,9 @@ Prompts were conversational — "what should the first test be?", "why should it
 - app.ts and server.ts separated — so supertest can import the app without binding a real port
 - validateEmployee called inside the route — HTTP layer delegates to the domain layer, not the other way around
 - afterEach cleans DB rows, afterAll closes pool — tests are isolated and repeatable
+
+## Start the Project
+
+- Clone this repo `git clone git@github.com:praveenprk/Incubyte-Salary-Management-Kata.git`
+- `cd` into the cloned repo
+- Run `npm start`
