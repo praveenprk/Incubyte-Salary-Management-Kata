@@ -20,4 +20,10 @@ it('should have no deductions for other countries', () => {
   expect(result.netSalary).toBe(100000)
 })
 
+it('should be case insensitive for country', () => {
+  const result = calculateSalary(100000, 'India')
+  expect(result.tds).toBe(10000)
+  expect(result.netSalary).toBe(90000)
+})
+
 })
