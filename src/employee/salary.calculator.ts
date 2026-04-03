@@ -1,6 +1,5 @@
 export function calculateSalary(gross: number, country: string) {
-  // const c = country.toLowerCase()
-  const c = country;
+  const c = country.toLowerCase()
   let tdsRate = 0
 
   if (c === 'india') tdsRate = 0.10
