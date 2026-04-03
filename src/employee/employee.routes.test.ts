@@ -157,7 +157,3 @@ describe('GET /employees/metrics/jobtitle', () => {
   })
 
 })
-
- afterAll(() => {
-    
-  })

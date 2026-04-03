@@ -7,10 +7,6 @@ describe('Employee store repo', () => {
     db.prepare('DELETE FROM employees').run()
   })
 
-  afterAll(() => {
-    
-  })
-
   it('should insert a valid employee and return it with an id', async () => {
 
    
