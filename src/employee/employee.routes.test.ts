@@ -212,3 +212,14 @@ describe('DELETE /employees/:id', () => {
   })
 
 })
+
+describe('GET /employees/metrics/country - edge cases', () => {
+
+  it('should return 404 when no employees found for country', async () => {
+    const response = await request(app)
+      .get('/employees/metrics/country?country=north+korea')
+
+    expect(response.status).toBe(404)
+  })
+
+})
