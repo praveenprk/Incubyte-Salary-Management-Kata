@@ -8,4 +8,10 @@ describe('Salary calculator', () => {
     expect(result.netSalary).toBe(90000)
   })
 
+  it('should deduct 12% TDS for united states', () => {
+    const result = calculateSalary(100000, 'united states')
+    expect(result.tds).toBe(12000)
+    expect(result.netSalary).toBe(88000)
+})
+
 })
