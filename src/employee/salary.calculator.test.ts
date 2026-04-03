@@ -14,4 +14,10 @@ describe('Salary calculator', () => {
     expect(result.netSalary).toBe(88000)
 })
 
+it('should have no deductions for other countries', () => {
+  const result = calculateSalary(100000, 'germany')
+  expect(result.tds).toBe(0)
+  expect(result.netSalary).toBe(100000)
+})
+
 })
