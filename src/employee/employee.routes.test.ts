@@ -1,11 +1,11 @@
 import request from 'supertest'
 import app from '../app'
-import pool from '../db/db'
+import db from '../db/db'
 
 describe('POST /employees', () => {
 
-  afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+  afterEach(() => {
+    db.prepare('DELETE FROM employees').run()
   })
 
 
@@ -47,7 +47,7 @@ describe('POST /employees', () => {
 describe('GET /employees/:id', () => {
 
   afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+    db.prepare('DELETE FROM employees').run()
   })
 
   it('should return an employee by id', async () => {
@@ -73,7 +73,7 @@ describe('GET /employees/:id', () => {
 describe('GET /employees/:id/salary', () => {
 
   afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+    db.prepare('DELETE FROM employees').run()
   })
 
   it('should deduct 10% TDS for india', async () => {
@@ -120,7 +120,7 @@ describe('GET /employees/:id/salary', () => {
 describe('GET /employees/metrics/country', () => {
 
   afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+    db.prepare('DELETE FROM employees').run()
   })
 
   it('should return min, max and average salary for a country', async () => {
@@ -142,7 +142,7 @@ describe('GET /employees/metrics/country', () => {
 describe('GET /employees/metrics/jobtitle', () => {
 
   afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+    db.prepare('DELETE FROM employees').run()
   })
 
   it('should return average salary for a job title', async () => {
@@ -158,6 +158,6 @@ describe('GET /employees/metrics/jobtitle', () => {
 
 })
 
- afterAll(async () => {
-    await pool.end()
+ afterAll(() => {
+    
   })

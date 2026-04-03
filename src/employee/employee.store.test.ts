@@ -1,14 +1,14 @@
-import pool from '../db/db';
+import db from '../db/db'
 import { createEmployee } from './employee.store';
 import { Employee } from './employee.types';
 
 describe('Employee store repo', () => {
-   afterEach(async () => {
-    await pool.query('DELETE FROM employees')
+   afterEach(() => {
+    db.prepare('DELETE FROM employees').run()
   })
 
-  afterAll(async () => {
-    await pool.end()
+  afterAll(() => {
+    
   })
 
   it('should insert a valid employee and return it with an id', async () => {
