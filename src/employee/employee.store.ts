@@ -1,41 +1,37 @@
-import pool from '../db/db'
-import { Employee } from './employee.types'
+import db from '../db/db'
+import { Employee, EmployeeRecord } from './employee.types'
 
-export async function createEmployee(emp: Employee) {
-  const { name, salary, jobTitle, country } = emp
+type Metrics = {
+  min: number
+  max: number
+  avg: number
+}
 
-  const result = await pool.query(
+const SELECT = `SELECT id, name, salary, job_title as jobTitle, country FROM employees`
+
+export function createEmployee(emp: Employee): EmployeeRecord {
+  const stmt = db.prepare(
     `INSERT INTO employees (name, salary, job_title, country)
-     VALUES ($1, $2, $3, $4)
-     RETURNING *`,
-    [name, salary, jobTitle, country]
+     VALUES (@name, @salary, @jobTitle, @country)`
   )
-
-  return result.rows[0]
+  const result = stmt.run(emp)
+  return db.prepare(`${SELECT} WHERE id = ?`).get(result.lastInsertRowid) as EmployeeRecord
 }
 
-export async function getEmployeeById(id: number) {
-  const result = await pool.query(
-    'SELECT * FROM employees WHERE id = $1',
-    [id]
-  )
-  return result.rows[0] || null
+export function getEmployeeById(id: number): EmployeeRecord | null {
+  return db.prepare(`${SELECT} WHERE id = ?`).get(id) as EmployeeRecord || null
 }
 
-export async function getSalaryMetricsByCountry(country: string) {
-  const result = await pool.query(
+export function getSalaryMetricsByCountry(country: string): Metrics | null {
+  return db.prepare(
     `SELECT MIN(salary) as min, MAX(salary) as max, AVG(salary) as avg
-     FROM employees WHERE LOWER(country) = LOWER($1)`,
-    [country]
-  )
-  return result.rows[0]
+     FROM employees WHERE LOWER(country) = LOWER(?)`
+  ).get(country) as Metrics || null
 }
 
-export async function getAvgSalaryByJobTitle(jobTitle: string) {
-  const result = await pool.query(
+export function getAvgSalaryByJobTitle(jobTitle: string): { avg: number } | null {
+  return db.prepare(
     `SELECT AVG(salary) as avg
-     FROM employees WHERE LOWER(job_title) = LOWER($1)`,
-    [jobTitle]
-  )
-  return result.rows[0]
+     FROM employees WHERE LOWER(job_title) = LOWER(?)`
+  ).get(jobTitle) as { avg: number } || null
 }
