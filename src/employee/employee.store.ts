@@ -18,6 +18,18 @@ export function createEmployee(emp: Employee): EmployeeRecord {
   return db.prepare(`${SELECT} WHERE id = ?`).get(result.lastInsertRowid) as EmployeeRecord
 }
 
+export function updateEmployee(id: number, emp: Employee): EmployeeRecord | null {
+  const existing = getEmployeeById(id)
+  if (!existing) return null
+
+  db.prepare(
+    `UPDATE employees SET name = @name, salary = @salary, job_title = @jobTitle, country = @country
+     WHERE id = @id`
+  ).run({ ...emp, id })
+
+  return getEmployeeById(id)
+}
+
 export function getEmployeeById(id: number): EmployeeRecord | null {
   return db.prepare(`${SELECT} WHERE id = ?`).get(id) as EmployeeRecord || null
 }
