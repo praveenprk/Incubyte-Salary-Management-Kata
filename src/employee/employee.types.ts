@@ -4,3 +4,7 @@ export interface Employee {
     jobTitle: string,
     country: string,
 }
+
+export type EmployeeRecord = Employee & {
+  id: number
+}
