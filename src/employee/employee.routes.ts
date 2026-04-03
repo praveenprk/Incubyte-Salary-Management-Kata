@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createEmployee, getAvgSalaryByJobTitle, getEmployeeById, getSalaryMetricsByCountry } from './employee.store'
+import { createEmployee, updateEmployee, getAvgSalaryByJobTitle, getEmployeeById, getSalaryMetricsByCountry } from './employee.store'
 import { validateEmployee } from './employee.validator'
 import { calculateSalary } from './salary.calculator'
 
@@ -30,6 +30,26 @@ router.get('/:id', (req, res) => {
   }
 
   res.status(200).json(employee)
+})
+
+// update employee
+router.put('/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const emp = req.body
+
+  const { valid } = validateEmployee(emp)
+  if (!valid) {
+    res.status(400).json({ error: 'Invalid employee data' })
+    return
+  }
+
+  const result = updateEmployee(id, emp)
+  if (!result) {
+    res.status(404).json({ error: 'Employee not found' })
+    return
+  }
+
+  res.status(200).json(result)
 })
 
 // calc salary
