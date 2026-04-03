@@ -157,3 +157,32 @@ describe('GET /employees/metrics/jobtitle', () => {
   })
 
 })
+
+describe('PUT /employees/:id', () => {
+
+  afterEach(() => {
+    db.prepare('DELETE FROM employees').run()
+  })
+
+  it('should update an employee and return 200', async () => {
+    const created = await request(app)
+      .post('/employees')
+      .send({ name: 'pk', salary: 150000, jobTitle: 'swe', country: 'india' })
+
+    const response = await request(app)
+      .put(`/employees/${created.body.id}`)
+      .send({ name: 'pk updated', salary: 200000, jobTitle: 'senior swe', country: 'india' })
+
+    expect(response.status).toBe(200)
+    expect(response.body.name).toBe('pk updated')
+  })
+
+  it('should return 404 when employee not found', async () => {
+    const response = await request(app)
+      .put('/employees/99999')
+      .send({ name: 'pk', salary: 150000, jobTitle: 'swe', country: 'india' })
+
+    expect(response.status).toBe(404)
+  })
+
+})
