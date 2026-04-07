@@ -19,6 +19,38 @@ router.post('/', (req, res) => {
   res.status(201).json(result)
 })
 
+// get metrics by country
+router.get('/metrics/country', (req, res) => {
+  const country = req.query.country as string
+  const metrics = getSalaryMetricsByCountry(country)
+
+  if (!metrics) {
+    res.status(404).json({ error: 'No employees found for this country' })
+    return
+  }
+
+  res.status(200).json({
+    min: metrics.min,
+    max: metrics.max,
+    avg: metrics.avg
+  })
+})
+
+// get metrics by job title
+router.get('/metrics/jobtitle', (req, res) => {
+  const jobTitle = req.query.jobTitle as string
+  const metrics = getAvgSalaryByJobTitle(jobTitle)
+
+  if (!metrics) {
+    res.status(404).json({ error: 'No employees found for this job title' })
+    return
+  }
+
+  res.status(200).json({
+    avg: metrics.avg
+  })
+})
+
 // get emp by id
 router.get('/:id', (req, res) => {
   const id = parseInt(req.params.id)
@@ -64,38 +96,6 @@ router.get('/:id/salary', (req, res) => {
 
   const { tds, netSalary } = calculateSalary(employee.salary, employee.country)
   res.status(200).json({ tds, netSalary })
-})
-
-// get metrics by country
-router.get('/metrics/country', (req, res) => {
-  const country = req.query.country as string
-  const metrics = getSalaryMetricsByCountry(country)
-
-  if (!metrics) {
-    res.status(404).json({ error: 'No employees found for this country' })
-    return
-  }
-
-  res.status(200).json({
-    min: metrics.min,
-    max: metrics.max,
-    avg: metrics.avg
-  })
-})
-
-// get metrics by job title
-router.get('/metrics/jobtitle', (req, res) => {
-  const jobTitle = req.query.jobTitle as string
-  const metrics = getAvgSalaryByJobTitle(jobTitle)
-
-  if (!metrics) {
-    res.status(404).json({ error: 'No employees found for this job title' })
-    return
-  }
-
-  res.status(200).json({
-    avg: metrics.avg
-  })
 })
 
 router.delete('/:id', (req, res) => {
